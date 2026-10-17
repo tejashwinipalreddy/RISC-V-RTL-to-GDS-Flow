@@ -1,6 +1,6 @@
 corner,process,voltage_V,temperature_C,liberty_file,rc_corner,setup_WNS_ns,setup_TNS_ns,hold_WNS_ns,hold_TNS_ns,violating_endpoints,status
-TT,typical,1.8,PDK-defined,PDK-defined,REPLACE_WITH_REAL_TT.lib,typical,NA,NA,NA,NA,NA,TEMPLATE_NOT_RUN
-SS,slow,1.6,PDK-defined,PDK-defined,REPLACE_WITH_REAL_SS.lib,slow,NA,NA,NA,NA,NA,TEMPLATE_NOT_RUN
-FF,fast,2.4,PDK-defined,PDK-defined,REPLACE_WITH_REAL_FF.lib,fast,NA,NA,NA,NA,NA,TEMPLATE_NOT_RUN
-SF,slow-fast,2.0,PDK-defined,PDK-defined,REPLACE_WITH_REAL_SF.lib,PDK-defined,NA,NA,NA,NA,NA,TEMPLATE_NOT_RUN
-FS,fast-slow,-,PDK-defined,PDK-defined,REPLACE_WITH_REAL_FS.lib,PDK-defined,NA,NA,NA,NA,NA,TEMPLATE_NOT_RUN
+TT,typical,1.8,25,sky130_fd_sc_hd__tt_025C_1v80.lib,typical,NA,NA,NA,NA,NA,NOT_RUN
+SS,slow,1.6,100,sky130_fd_sc_hd__ss_100C_1v60.lib,slow,NA,NA,NA,NA,NA,NOT_RUN
+FF,fast,1.95,-40,sky130_fd_sc_hd__ff_n40C_1v95.lib,fast,NA,NA,NA,NA,NA,NOT_RUN
+SF,slow-fast,PDK-defined,PDK-defined,REPLACE_WITH_REAL_SF.lib,PDK-defined,NA,NA,NA,NA,NA,NOT_RUN
+FS,fast-slow,PDK-defined,PDK-defined,REPLACE_WITH_REAL_FS.lib,PDK-defined,NA,NA,NA,NA,NA,NOT_RUN
