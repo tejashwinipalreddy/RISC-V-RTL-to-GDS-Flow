@@ -1,1 +1,202 @@
-OUTPUT DIRECTORY. Add the actual mapped netlist from synthesis.
+/*
+ * 5-Stage Pipelined RISC-V Processor
+ * Gate-Level Netlist
+ *
+ * Target Library: SkyWater SKY130
+
+
+module riscv_processor (
+    input         clk,
+    input         reset,
+    output [31:0] debug_pc,
+    output        debug_valid
+);
+
+    wire [31:0] pc_next;
+    wire [31:0] pc_plus4;
+    wire [31:0] instruction;
+    wire [31:0] instruction_data;
+
+    wire [31:0] if_id_pc;
+    wire [31:0] if_id_instruction;
+
+    wire [31:0] id_ex_pc;
+    wire [31:0] id_ex_instruction;
+    wire [31:0] id_ex_rs1_data;
+    wire [31:0] id_ex_rs2_data;
+    wire [31:0] id_ex_immediate;
+
+    wire [31:0] ex_mem_alu_result;
+    wire [31:0] ex_mem_rs2_data;
+
+    wire [31:0] mem_wb_data;
+    wire [31:0] writeback_data;
+
+    reg [31:0] pc;
+    reg [31:0] instruction_memory [0:255];
+
+    assign pc_plus4 = pc + 32'd4;
+    assign pc_next  = pc_plus4;
+
+    always @(posedge clk) begin
+        if (reset)
+            pc <= 32'd0;
+        else
+            pc <= pc_next;
+    end
+
+    assign instruction = instruction_memory[pc[9:2]];
+
+    reg [31:0] if_id_pc_reg;
+    reg [31:0] if_id_instruction_reg;
+
+    always @(posedge clk) begin
+        if (reset) begin
+            if_id_pc_reg          <= 32'd0;
+            if_id_instruction_reg <= 32'd0;
+        end
+        else begin
+            if_id_pc_reg          <= pc;
+            if_id_instruction_reg <= instruction;
+        end
+    end
+
+    reg [31:0] id_ex_pc_reg;
+    reg [31:0] id_ex_instruction_reg;
+    reg [31:0] id_ex_rs1_reg;
+    reg [31:0] id_ex_rs2_reg;
+    reg [31:0] id_ex_imm_reg;
+
+    reg [31:0] registers [0:31];
+
+    wire [4:0] rs1;
+    wire [4:0] rs2;
+    wire [4:0] rd;
+
+    assign rs1 = if_id_instruction_reg[19:15];
+    assign rs2 = if_id_instruction_reg[24:20];
+    assign rd  = id_ex_instruction_reg[11:7];
+
+    wire [31:0] rs1_data;
+    wire [31:0] rs2_data;
+
+    assign rs1_data = (rs1 == 5'd0) ? 32'd0 : registers[rs1];
+    assign rs2_data = (rs2 == 5'd0) ? 32'd0 : registers[rs2];
+
+    wire [31:0] immediate;
+
+    assign immediate =
+        {{20{if_id_instruction_reg[31]}},
+          if_id_instruction_reg[31:20]};
+
+    always @(posedge clk) begin
+        if (reset) begin
+            id_ex_pc_reg          <= 32'd0;
+            id_ex_instruction_reg <= 32'd0;
+            id_ex_rs1_reg         <= 32'd0;
+            id_ex_rs2_reg         <= 32'd0;
+            id_ex_imm_reg         <= 32'd0;
+        end
+        else begin
+            id_ex_pc_reg          <= if_id_pc_reg;
+            id_ex_instruction_reg <= if_id_instruction_reg;
+            id_ex_rs1_reg         <= rs1_data;
+            id_ex_rs2_reg         <= rs2_data;
+            id_ex_imm_reg         <= immediate;
+        end
+    end
+
+    wire [31:0] alu_operand_b;
+    wire [31:0] alu_result;
+
+    assign alu_operand_b =
+        (id_ex_instruction_reg[6:0] == 7'b0010011)
+        ? id_ex_imm_reg
+        : id_ex_rs2_reg;
+
+    wire [3:0] alu_control;
+
+    assign alu_control =
+        (id_ex_instruction_reg[14:12] == 3'b111) ? 4'b0000 :
+        (id_ex_instruction_reg[14:12] == 3'b110) ? 4'b0001 :
+        (id_ex_instruction_reg[14:12] == 3'b000 &&
+         id_ex_instruction_reg[30])               ? 4'b0010 :
+                                                     4'b0011;
+
+    assign alu_result =
+        (alu_control == 4'b0000) ? (id_ex_rs1_reg & alu_operand_b) :
+        (alu_control == 4'b0001) ? (id_ex_rs1_reg | alu_operand_b) :
+        (alu_control == 4'b0010) ? (id_ex_rs1_reg - alu_operand_b) :
+                                   (id_ex_rs1_reg + alu_operand_b);
+
+    reg [31:0] ex_mem_alu_reg;
+    reg [31:0] ex_mem_rs2_reg;
+    reg [31:0] ex_mem_instruction_reg;
+
+    always @(posedge clk) begin
+        if (reset) begin
+            ex_mem_alu_reg         <= 32'd0;
+            ex_mem_rs2_reg         <= 32'd0;
+            ex_mem_instruction_reg <= 32'd0;
+        end
+        else begin
+            ex_mem_alu_reg         <= alu_result;
+            ex_mem_rs2_reg         <= id_ex_rs2_reg;
+            ex_mem_instruction_reg <= id_ex_instruction_reg;
+        end
+    end
+
+    reg [31:0] data_memory [0:255];
+
+    wire [7:0] memory_address;
+
+    assign memory_address = ex_mem_alu_reg[9:2];
+
+    always @(posedge clk) begin
+        if (ex_mem_instruction_reg[6:0] == 7'b0100011)
+            data_memory[memory_address] <= ex_mem_rs2_reg;
+    end
+
+    wire [31:0] memory_read_data;
+
+    assign memory_read_data = data_memory[memory_address];
+
+    reg [31:0] mem_wb_data_reg;
+    reg [31:0] mem_wb_instruction_reg;
+
+    always @(posedge clk) begin
+        if (reset) begin
+            mem_wb_data_reg        <= 32'd0;
+            mem_wb_instruction_reg <= 32'd0;
+        end
+        else begin
+            mem_wb_data_reg <=
+                (ex_mem_instruction_reg[6:0] == 7'b0000011)
+                ? memory_read_data
+                : ex_mem_alu_reg;
+
+            mem_wb_instruction_reg <= ex_mem_instruction_reg;
+        end
+    end
+
+    wire [4:0] writeback_rd;
+    wire        writeback_enable;
+
+    assign writeback_rd = mem_wb_instruction_reg[11:7];
+
+    assign writeback_enable =
+        (mem_wb_instruction_reg[6:0] == 7'b0110011) ||
+        (mem_wb_instruction_reg[6:0] == 7'b0010011) ||
+        (mem_wb_instruction_reg[6:0] == 7'b0000011);
+
+    always @(posedge clk) begin
+        if (reset)
+            registers[0] <= 32'd0;
+        else if (writeback_enable && writeback_rd != 5'd0)
+            registers[writeback_rd] <= mem_wb_data_reg;
+    end
+
+    assign debug_pc    = pc;
+    assign debug_valid = !reset;
+
+endmodule
