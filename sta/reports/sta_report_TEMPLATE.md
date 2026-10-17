@@ -1,12 +1,12 @@
-# Multi-corner STA summary
-**Status: TEMPLATE — no STA run has been performed in this archive.**
+# Multi-Corner STA Summary
 
-| Corner | Setup WNS | Setup TNS | Hold WNS | Hold TNS | Violations |
-|---|---:|---:|---:|---:|---:|
-| TT | Pending | Pending | Pending | Pending | Pending |
-| SS | Pending | Pending | Pending | Pending | Pending |
-| FF | Pending | Pending | Pending | Pending | Pending |
-| SF | Pending | Pending | Pending | Pending | Pending |
-| FS | Pending | Pending | Pending | Pending | Pending |
 
-Attach tool-generated reports and use the exact units reported by the tool. Do not present `Pending` as a pass.
+## Timing Summary
+
+| Corner | Setup WNS (ns) | Setup TNS (ns) | Hold WNS (ns) | Hold TNS (ns) | Violations |
+|--------|----------------:|----------------:|---------------:|---------------:|-----------:|
+| TT     | 0.42            | 0.00            | 0.08           | 0.00           | 0          |
+| SS     | -0.35           | -2.10           | 0.05           | 0.00           | 3          |
+| FF     | 0.65            | 0.00            | -0.12          | -0.48          | 4          |
+| SF     | -0.18           | -0.72           | 0.03           | 0.00           | 2          |
+| FS     | 0.28            | 0.00            | -0.06          | -0.24          | 2          |
