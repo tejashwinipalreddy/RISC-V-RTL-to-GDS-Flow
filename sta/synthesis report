@@ -164,4 +164,4 @@ Found and reported 0 problems.
 
 End of script. Logfile hash: 54c9d1005f, CPU: user 0.04s system 0.06s, MEM: 16.88 MB peak
 Yosys 0.47+121 (git sha1 98b4affc4, g++ 13.2.0-23ubuntu4 -fPIC -O3)
-Time spent: 26% 2x read_verilog (0 sec), 20% 4x opt_expr (0 sec), ...
+Time spent: 26% 2x read_verilog (0 sec), 20% 4x opt_expr (0 sec), 
