@@ -1,0 +1,1 @@
+OUTPUT DIRECTORY. Replace with real simulator log and VCD after running the testbench.

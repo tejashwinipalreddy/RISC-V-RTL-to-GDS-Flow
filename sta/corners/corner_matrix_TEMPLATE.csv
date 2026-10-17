@@ -1,0 +1,6 @@
+corner,process,voltage_V,temperature_C,liberty_file,rc_corner,setup_WNS_ns,setup_TNS_ns,hold_WNS_ns,hold_TNS_ns,violating_endpoints,status
+TT,typical,PDK-defined,PDK-defined,REPLACE_WITH_REAL_TT.lib,typical,NA,NA,NA,NA,NA,TEMPLATE_NOT_RUN
+SS,slow,PDK-defined,PDK-defined,REPLACE_WITH_REAL_SS.lib,slow,NA,NA,NA,NA,NA,TEMPLATE_NOT_RUN
+FF,fast,PDK-defined,PDK-defined,REPLACE_WITH_REAL_FF.lib,fast,NA,NA,NA,NA,NA,TEMPLATE_NOT_RUN
+SF,slow-fast,PDK-defined,PDK-defined,REPLACE_WITH_REAL_SF.lib,PDK-defined,NA,NA,NA,NA,NA,TEMPLATE_NOT_RUN
+FS,fast-slow,PDK-defined,PDK-defined,REPLACE_WITH_REAL_FS.lib,PDK-defined,NA,NA,NA,NA,NA,TEMPLATE_NOT_RUN

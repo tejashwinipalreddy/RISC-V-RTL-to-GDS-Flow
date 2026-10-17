@@ -1,0 +1,2 @@
+# Architecture notes
+The intended architecture uses the classic IF-ID-EX-MEM-WB pipeline. Pipeline registers separate stages. A production-quality implementation would also need a defined hazard strategy, forwarding/stalling, branch handling, reset behavior, complete instruction decode, and a thorough self-checking testbench. The starter RTL is for learning and should be reviewed and expanded before claiming full RISC-V compliance.

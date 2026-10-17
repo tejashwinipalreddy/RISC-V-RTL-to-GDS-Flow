@@ -1,0 +1,8 @@
+# Example Yosys script; configure target library and technology mapping as needed.
+read_verilog rtl/rv32i_pipeline.v
+hierarchy -top rv32i_pipeline
+proc
+opt
+check
+stat
+write_verilog synthesis/netlist/rv32i_pipeline_generic.v

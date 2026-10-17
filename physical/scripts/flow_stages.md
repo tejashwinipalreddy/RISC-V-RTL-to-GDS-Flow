@@ -1,0 +1,14 @@
+# RTL-to-GDS stage checklist
+- [ ] Read RTL / elaborate
+- [ ] Synthesis
+- [ ] Floorplan
+- [ ] Tap/endcap and power grid (platform-specific)
+- [ ] Placement
+- [ ] CTS
+- [ ] Global route
+- [ ] Detailed route
+- [ ] Parasitic extraction (SPEF)
+- [ ] Multi-corner STA
+- [ ] DRC/LVS (if required)
+- [ ] GDSII stream-out
+- [ ] Archive tool logs and configuration
