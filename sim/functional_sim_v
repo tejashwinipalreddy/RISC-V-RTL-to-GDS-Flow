@@ -1,0 +1,78 @@
+module rv32i_pipeline (
+    input         clk,
+    input         reset,
+    output [31:0] pc,
+    output [31:0] instruction,
+    output [31:0] alu_result,
+    output [31:0] writeback_data
+);
+
+    wire [31:0] next_pc;
+    wire [31:0] pc_plus4;
+    wire [31:0] instruction_data;
+    wire [31:0] alu_out;
+    wire [31:0] wb_data;
+
+    reg  [31:0] pc_reg;
+    reg  [31:0] if_id_pc;
+    reg  [31:0] if_id_instruction;
+    reg  [31:0] id_ex_alu;
+    reg  [31:0] ex_mem_alu;
+    reg  [31:0] mem_wb_data;
+
+    // Instruction Fetch (IF)
+    assign pc_plus4 = pc_reg + 32'd4;
+
+    always @(posedge clk or posedge reset) begin
+        if (reset)
+            pc_reg <= 32'd0;
+        else
+            pc_reg <= next_pc;
+    end
+
+    assign next_pc = pc_plus4;
+
+    // Simple illustrative instruction signal
+    assign instruction_data = 32'h00000013;
+
+    // IF/ID Pipeline Register
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            if_id_pc          <= 32'd0;
+            if_id_instruction <= 32'd0;
+        end else begin
+            if_id_pc          <= pc_reg;
+            if_id_instruction <= instruction_data;
+        end
+    end
+
+    // Execute-stage illustrative datapath
+    always @(posedge clk or posedge reset) begin
+        if (reset)
+            id_ex_alu <= 32'd0;
+        else
+            id_ex_alu <= if_id_pc + 32'd4;
+    end
+
+    // EX/MEM Pipeline Register
+    always @(posedge clk or posedge reset) begin
+        if (reset)
+            ex_mem_alu <= 32'd0;
+        else
+            ex_mem_alu <= id_ex_alu;
+    end
+
+    // MEM/WB Pipeline Register
+    always @(posedge clk or posedge reset) begin
+        if (reset)
+            mem_wb_data <= 32'd0;
+        else
+            mem_wb_data <= ex_mem_alu;
+    end
+
+    assign pc            = pc_reg;
+    assign instruction   = if_id_instruction;
+    assign alu_result    = ex_mem_alu;
+    assign writeback_data = mem_wb_data;
+
+endmodule
