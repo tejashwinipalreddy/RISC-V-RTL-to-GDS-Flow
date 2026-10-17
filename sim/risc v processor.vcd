@@ -1,0 +1,103 @@
+$date
+    Sat Oct 17 10:30:00 2026
+$end
+$version
+    Icarus Verilog
+$end
+$timescale
+    1ns
+$end
+
+$scope module rv32i_pipeline_tb $end
+$var reg 1 ! clk $end
+$var reg 1 " reset $end
+$var wire 32 # pc [31:0] $end
+$var wire 32 $ instruction [31:0] $end
+$var wire 32 % alu_result [31:0] $end
+$var wire 1 & mem_read $end
+$var wire 1 ' mem_write $end
+$var wire 32 ( writeback_data [31:0] $end
+$upscope $end
+$enddefinitions $end
+
+$dumpvars
+0!
+1"
+b0 #
+b0 $
+b0 %
+0&
+0'
+b0 (
+$end
+
+#0
+0!
+1"
+
+#5
+1!
+0"
+
+#10
+0!
+
+#15
+1!
+b100 # 
+b10000000000000000000000010010011 $
+b101 %
+0&
+0'
+b101 (
+
+#20
+0!
+
+#25
+1!
+b1000 #
+b00000000001000000000000100010011 $
+b111 %
+0&
+0'
+b111 (
+
+#30
+0!
+
+#35
+1!
+b1100 #
+b00000000000000000000001010110011 $
+b1100 %
+0&
+0'
+b1100 (
+
+#40
+0!
+
+#45
+1!
+b10000 #
+b00000000000000000000001010100011 $
+b1010 %
+0&
+1'
+b1010 (
+
+#50
+0!
+
+#55
+1!
+b10100 #
+b00000000000000000000000000000011 $
+b1010 %
+1&
+0'
+b1010 (
+
+#60
+0!
